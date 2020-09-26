@@ -5,11 +5,9 @@ namespace DefaultNamespace
 {
     public class Keys
     {
-
-
         public const int WiderButtons = 25;
         public const int SpaceBarWidth = 100;
-        
+
         public static readonly Key Q = new Key("q");
         public static readonly Key W = new Key("w");
         public static readonly Key E = new Key("e");
@@ -20,33 +18,66 @@ namespace DefaultNamespace
         public static readonly Key I = new Key("i");
         public static readonly Key O = new Key("o");
         public static readonly Key P = new Key("p");
-        
+
         public static readonly Key A = new Key("a");
         public static readonly Key S = new Key("s");
         public static readonly Key D = new Key("d");
         public static readonly Key F = new Key("f");
-        public static readonly Key g = new Key("g");
-        public static readonly Key h = new Key("h");
-        public static readonly Key j = new Key("j");
-        public static readonly Key k = new Key("k");
-        public static readonly Key l = new Key("l");
+        public static readonly Key G = new Key("g");
+        public static readonly Key H = new Key("h");
+        public static readonly Key J = new Key("j");
+        public static readonly Key K = new Key("k");
+        public static readonly Key L = new Key("l");
 
-        public static readonly ImageButton Uppercase = new ImageButton( "arrow-up", WiderButtons);
-        public static readonly Key z = new Key("z");
-        public static readonly Key x = new Key("x");
-        public static readonly Key c = new Key("c");
-        public static readonly Key v = new Key("v");
-        public static readonly Key b = new Key("b");
-        public static readonly Key n = new Key("n");
-        public static readonly Key m = new Key("m");
-        public static readonly ImageButton Backspace = new ImageButton( "backspace", WiderButtons);
-        
+        public static readonly ImageButton Uppercase = new ImageButton("arrow-up", WiderButtons);
+        public static readonly Key Z = new Key("z");
+        public static readonly Key X = new Key("x");
+        public static readonly Key C = new Key("c");
+        public static readonly Key V = new Key("v");
+        public static readonly Key B = new Key("b");
+        public static readonly Key N = new Key("n");
+        public static readonly Key M = new Key("m");
+        public static readonly ImageButton Backspace = new ImageButton("backspace", WiderButtons);
+
         public static readonly ToggleableTextButton Symbols = new ToggleableTextButton("?123", "ABC", WiderButtons);
-        public static readonly Key at = new Key("@");
+        public static readonly Key At = new Key("@");
         public static readonly TextButton Space = new TextButton("space", SpaceBarWidth);
-        public static readonly Key point = new Key(".");
+        public static readonly Key Dot = new Key(".");
         public static readonly TextButton Go = new TextButton("Go", 34);
 
+
+        // Numbers
+        public static readonly Key One = new Key("1");
+        public static readonly Key Two = new Key("2");
+        public static readonly Key Three = new Key("3");
+        public static readonly Key Four = new Key("4");
+        public static readonly Key Five = new Key("5");
+        public static readonly Key Six = new Key("6");
+        public static readonly Key Seven = new Key("7");
+        public static readonly Key Eight = new Key("8");
+        public static readonly Key Nine = new Key("9");
+        public static readonly Key Zero = new Key("0");
+
+        public static readonly Key NumberSign = new Key("#");
+        public static readonly Key DollarSign = new Key("$");
+        public static readonly Key UnderScore = new Key("_");
+        public static readonly Key AndSymbol = new Key("&");
+        public static readonly Key Hyphen = new Key("-");
+        public static readonly Key PlusSign = new Key("+");
+        public static readonly Key OpeningParenthese = new Key("(");
+        public static readonly Key ClosingParenthese = new Key(")");
+        public static readonly Key ForwardSlash = new Key("/");
+
+        public static readonly ToggleableTextButton MoreSymbols = new ToggleableTextButton("=\\<", "?123", WiderButtons);
+        public static readonly Key Asterisk = new Key("*");
+        public static readonly Key DoubleQuote = new Key("\"");
+        public static readonly Key SingleQuote = new Key("'");
+        public static readonly Key Colon = new Key(":");
+        public static readonly Key SemiColon = new Key(";");
+        public static readonly Key ExclamationMark = new Key("!");
+        public static readonly Key QuestionMark = new Key("?");
+
+        public static readonly Key Comma = new Key(",");
     }
 
     public class KeyboardLayoutHandler
@@ -55,9 +86,26 @@ namespace DefaultNamespace
 
         public KeyboardLayoutHandler()
         {
-            KeyboardRow firstRow = new KeyboardRow(Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
-            KeyboardRow secondRow = new KeyboardRow(Keys.A, Keys.S, Keys.D, Keys.F, Keys.g, Keys.h, Keys.j, Keys.k, Keys.l);
-            KeyboardRow thirdRow = new KeyboardRow(Keys.A, Keys.S, Keys.D, Keys.F, Keys.g, Keys.h, Keys.j, Keys.k, Keys.l);
+            
+            // Normal layout
+            KeyboardRow normalRowFirst = new KeyboardRow(Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
+            KeyboardRow normalRowSecond = new KeyboardRow(Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L);
+            KeyboardRow normalRowThird = new KeyboardRow(Keys.Uppercase, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, Keys.Backspace);
+            KeyboardRow normalRowFourth = new KeyboardRow(Keys.Symbols, Keys.At, Keys.Space, Keys.Dot, Keys.Go);
+
+            KeyboardLayout normalLayout = new KeyboardLayout(
+                normalRowFirst, normalRowSecond, normalRowThird, normalRowFourth);
+
+            // Symbols layout
+            KeyboardRow symbolsRowFirst = new KeyboardRow(Keys.One, Keys.Two, Keys.Three, Keys.Four, Keys.Five, Keys.Six, Keys.Seven, Keys.Eight, Keys.Nine, Keys.Zero);
+            KeyboardRow symbolsRowSecond = new KeyboardRow(Keys.At, Keys.NumberSign, Keys.DollarSign, Keys.UnderScore, Keys.AndSymbol, Keys.Hyphen, Keys.PlusSign, Keys.OpeningParenthese, Keys.ClosingParenthese, Keys.ForwardSlash);
+            KeyboardRow symbolsRowThird = new KeyboardRow(new Spacer(Keys.WiderButtons), Keys.Asterisk, Keys.DoubleQuote, Keys.SingleQuote, Keys.Colon, Keys.SemiColon, Keys.ExclamationMark, Keys.QuestionMark, Keys.Backspace);
+            KeyboardRow symbolsRowFourth = new KeyboardRow(Keys.Symbols, Keys.Comma, Keys.Space, Keys.Dot, Keys.Go);
+
+            KeyboardLayout symbolsLayout = new KeyboardLayout(
+                symbolsRowFirst, symbolsRowSecond, symbolsRowThird, symbolsRowFourth);
+            
+            KeyboardLayouts = new KeyboardLayouts(normalLayout, symbolsLayout);
         }
     }
 
@@ -65,18 +113,28 @@ namespace DefaultNamespace
     public class KeyboardLayouts
     {
         public List<KeyboardLayout> Layouts = new List<KeyboardLayout>();
+
+        public KeyboardLayouts(params KeyboardLayout[] layouts)
+        {
+            this.Layouts = layouts.ToList();
+        }
     }
 
     public class KeyboardLayout
     {
         public List<KeyboardRow> rows = new List<KeyboardRow>();
+
+        public KeyboardLayout(params KeyboardRow[] rows)
+        {
+            this.rows = this.rows.ToList();
+        }
     }
 
     public class KeyboardRow
     {
-        private readonly List<Key> keys = new List<Key>();
+        private readonly List<KeyboardButton> keys = new List<KeyboardButton>();
 
-        public KeyboardRow(params Key[] keys)
+        public KeyboardRow(params KeyboardButton[] keys)
         {
             this.keys = this.keys.ToList();
         }
@@ -91,11 +149,11 @@ namespace DefaultNamespace
             this.name = name;
         }
     }
-    
+
     public class ToggleableTextButton : TextButton
     {
         public string DisplayTextToggledOn;
-        
+
         public ToggleableTextButton(string displayText, string displayTextToggledOn, float width) : base(displayText, width)
         {
             this.DisplayTextToggledOn = displayTextToggledOn;
@@ -131,7 +189,7 @@ namespace DefaultNamespace
             this.ImageResourcePath = imageResourcePath;
         }
     }
-    
+
     public class Spacer : KeyboardButton
     {
         public Spacer(float width) : base(width)
