@@ -34,11 +34,47 @@ public class Keyboard : MonoBehaviour
         }
     }
 
-    private void Populate(GameObject rowOne, KeyboardRow keyboardRow)
+    private void Populate(GameObject parent, KeyboardRow row)
     {
-        foreach (KeyboardObject keyboardObject in keyboardRow.Keys)
+        foreach (KeyboardObject keyboardObject in row.Keys)
         {
+            GameObject keyObj = new GameObject(keyboardObject.ToString());
+            keyObj.transform.parent = parent.transform;
+
+            // Set key background image (rounded rectangle)
+            Image backgroundImage = keyObj.AddComponent<Image>();
+            backgroundImage.sprite = Resources.Load<Sprite>("KeyBackgroundImage");
+
             
+            // Add a button
+            Button button = keyObj.AddComponent<Button>();
+
+            
+            // Adds a hard shadow
+            Shadow shadow = keyObj.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0, 80);
+            shadow.effectDistance = new Vector2(0, -0.5f);
+
+
+            // Adjust width and height
+            RectTransform rectTransform = keyObj.GetComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(keyboardObject.Width, keyboardObject.Height);
+
+
+            if (keyboardObject is ImageObjectButton imageObjectButton)
+            {
+                GameObject image = new GameObject("Image");
+                image.transform.parent = keyObj.transform;
+
+                Image img = image.AddComponent<Image>();
+                img.sprite = Resources.Load<Sprite>(imageObjectButton.ImageResourcePath);
+            }
+
+
+            if (keyboardObject is Key key)
+            {
+                keyObj.AddComponent<KeyBehaviour>();
+            }
         }
     }
 
@@ -63,6 +99,7 @@ public class Keyboard : MonoBehaviour
         // The main panel holds the four rows of the keyboard.
         MainPanel = new GameObject("Panel");
         MainPanel.transform.parent = transform;
+        
 
         // Sets the children rows to be vertically aligned
         VerticalLayoutGroup mainLayout = MainPanel.AddComponent<VerticalLayoutGroup>();
@@ -73,7 +110,9 @@ public class Keyboard : MonoBehaviour
     {
         GameObject row = new GameObject(name);
         row.transform.parent = parent.transform;
-
+        
+        CanvasRenderer canvasRenderer = row.AddComponent<CanvasRenderer>();
+        
         // Set keys to be horizontally aligned
         HorizontalLayoutGroup firstRowLayout = row.AddComponent<HorizontalLayoutGroup>();
         firstRowLayout.childAlignment = TextAnchor.MiddleCenter;

@@ -96,7 +96,7 @@ namespace DefaultNamespace
         private static KeyboardLayout normalLayout;
         private static KeyboardLayout symbolsLayout;
 
-        public KeyboardLayoutHandler()
+        static KeyboardLayoutHandler()
         {
             // Normal layout
             KeyboardRow normalRowOne = new KeyboardRow(0, 0, Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
@@ -150,7 +150,7 @@ namespace DefaultNamespace
 
         public KeyboardLayout(params KeyboardRow[] rows)
         {
-            Rows = Rows.ToList();
+            Rows = rows.ToList();
         }
     }
 
@@ -161,13 +161,13 @@ namespace DefaultNamespace
     {
         public float Spacing;
         public int RowIndex;
-        public readonly List<KeyboardObject> Keys = new List<KeyboardObject>();
+        public readonly List<KeyboardObject> Keys;
 
         public KeyboardRow(int rowIndex, float spacing, params KeyboardObject[] keys)
         {
             RowIndex = rowIndex;
             this.Spacing = spacing;
-            Keys = Keys.ToList();
+            Keys = keys.ToList();
         }
     }
 
