@@ -38,7 +38,6 @@ public class Keyboard : MonoBehaviour
         // Sets the children rows to be vertically aligned
         VerticalLayoutGroup mainLayout = mainPanel.AddComponent<VerticalLayoutGroup>();
         mainLayout.spacing = -3;
-        mainLayout.childAlignment = TextAnchor.UpperLeft;
 
         GameObject rowOne = InitRow("RowOne", mainPanel, 0);
         GameObject rowTwo = InitRow("RowTwo", mainPanel, -18.5f);
