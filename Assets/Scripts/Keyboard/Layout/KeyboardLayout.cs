@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace DefaultNamespace
 {
     
-
+    
     public class SpaceBarButton : TextButton
     {
         public SpaceBarButton(string name, float fontSize = Keys.KeyFontSize, float width = Keys.KeyWidth) : base(name, fontSize, width)
@@ -23,18 +23,18 @@ namespace DefaultNamespace
 
     public class BackspaceButton : ImageObjectButton
     {
-        public BackspaceButton(string name, string image, float width) : base(name, image, width)
+        public BackspaceButton(string name, string imageKey, float width) : base(name, imageKey, width)
         {
         }
     }
 
     public class UppercaseToggle : ToggleableImageObjectButton
     {
-        public string ImageCapsLock;
+        public string ImageCapsLockKey;
 
-        public UppercaseToggle(string name, string image, string imageToggledOn, string imageCapsLock, float width) : base(name, image, imageToggledOn, width)
+        public UppercaseToggle(string name, string imageKey, string imageToggledOn, string imageCapsLockKey, float width) : base(name, imageKey, imageToggledOn, width)
         {
-            ImageCapsLock = imageCapsLock;
+            ImageCapsLockKey = imageCapsLockKey;
         }
     }
 
@@ -79,11 +79,11 @@ namespace DefaultNamespace
     /// </summary>
     public class ToggleableImageObjectButton : ImageObjectButton
     {
-        public readonly string ImageToggledOnResourcePath;
+        public readonly string ImageToggledOnKey;
 
-        public ToggleableImageObjectButton(string name, string image, string imageToggledOn, float width) : base(name, image, width)
+        public ToggleableImageObjectButton(string name, string imageKey, string imageToggledOn, float width) : base(name, imageKey, width)
         {
-            ImageToggledOnResourcePath = imageToggledOn;
+            ImageToggledOnKey = imageToggledOn;
         }
     }
 
@@ -92,11 +92,11 @@ namespace DefaultNamespace
     /// </summary>
     public class ImageObjectButton : KeyboardObject
     {
-        public readonly string Image;
+        public readonly string ImageKey;
 
-        public ImageObjectButton(string name, string image, float width) : base(name, width)
+        public ImageObjectButton(string name, string imageKey, float width) : base(name, width)
         {
-            Image = image;
+            ImageKey = imageKey;
         }
     }
 

@@ -183,7 +183,6 @@ public class Keyboard : MonoBehaviour
         return row;
     }
 
-
     private void Populate(GameObject parent, KeyboardRow row, KeyboardSkin skin)
     {
         foreach (KeyboardObject keyboardObject in row.Keys)
@@ -225,7 +224,7 @@ public class Keyboard : MonoBehaviour
                 image.transform.parent = keyObj.transform;
 
                 Image img = image.AddComponent<Image>();
-                img.sprite = Resources.Load<Sprite>(imageObjectButton.Image);
+                img.sprite = skin.Load<Sprite>(imageObjectButton.ImageKey);
 
                 RectTransform imgRectTransform = image.GetComponent<RectTransform>();
                 imgRectTransform.sizeDelta = new Vector2(10, 10);
@@ -244,7 +243,7 @@ public class Keyboard : MonoBehaviour
                     0.8f);
 
                 TextButtonBehaviour textButtonBehaviour = keyObj.AddComponent<TextButtonBehaviour>();
-                textButtonBehaviour.Init(TextButton, skin.GetKeyForegroundColor());
+                textButtonBehaviour.Init(TextButton, skin);
 
                 if (keyboardObject is Key key)
                 {
@@ -263,7 +262,7 @@ public class Keyboard : MonoBehaviour
             if (keyboardObject is UppercaseToggle uppercaseToggle)
             {
                 _uppercaseBehaviour = image.AddComponent<UppercaseToggleBehaviour>();
-                _uppercaseBehaviour.Init(uppercaseToggle);
+                _uppercaseBehaviour.Init(uppercaseToggle, skin);
 
                 button.onClick.AddListener(ToggleUppercase);
             }
@@ -277,7 +276,6 @@ public class Keyboard : MonoBehaviour
             {
                 _toggleableTextButton = keyObj.AddComponent<ToggleableTextButtonBehaviour>();
                 _toggleableTextButton.Init(toggle);
-
 
                 button.onClick.AddListener(ToggleSymbols);
             }

@@ -7,9 +7,11 @@ namespace DefaultNamespace
     {
         private Image _image;
         private UppercaseToggle _keyboardObject;
+        private KeyboardSkin _keyboardSkin;
 
-        public void Init(UppercaseToggle keyboardObject)
+        public void Init(UppercaseToggle keyboardObject, KeyboardSkin keyboardSkin)
         {
+            _keyboardSkin = keyboardSkin;
             _keyboardObject = keyboardObject;
             _image = GetComponentInChildren<Image>();
         }
@@ -24,13 +26,13 @@ namespace DefaultNamespace
             switch (shiftMode)
             {
                 case ShiftMode.None:
-                    _image.sprite = Resources.Load<Sprite>(_keyboardObject.Image);
+                    _image.sprite = _keyboardSkin.Load<Sprite>(_keyboardObject.ImageKey);
                     break;
                 case ShiftMode.UppercaseSingle:
-                    _image.sprite = Resources.Load<Sprite>(_keyboardObject.ImageToggledOnResourcePath);
+                    _image.sprite = _keyboardSkin.Load<Sprite>(_keyboardObject.ImageToggledOnKey);
                     break;
                 case ShiftMode.UppercaseLock:
-                    _image.sprite = Resources.Load<Sprite>(_keyboardObject.ImageCapsLock);
+                    _image.sprite = _keyboardSkin.Load<Sprite>(_keyboardObject.ImageCapsLockKey);
                     break;
             }
         }
