@@ -166,7 +166,7 @@ namespace DefaultNamespace
         public KeyboardRow(int rowIndex, float spacing, params KeyboardObject[] keys)
         {
             RowIndex = rowIndex;
-            this.Spacing = spacing;
+            Spacing = spacing;
             Keys = keys.ToList();
         }
     }
