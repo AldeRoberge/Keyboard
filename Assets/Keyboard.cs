@@ -17,50 +17,50 @@ public enum ShiftMode
 
 public class Keyboard : MonoBehaviour
 {
-    public GameObject MainPanel;
-    public List<KeyBehaviour> Keys;
+    private GameObject _mainPanel;
+    private List<KeyBehaviour> _keys;
 
-    public Image ShiftToggleImage;
+    private Image _shiftToggleImage;
 
-    public ShiftMode ShiftMode;
-    public bool IsShowingSymbols;
+    private ShiftMode _shiftMode;
+    private bool _isShowingSymbols;
 
-    public TMP_InputField target;
+    public TMP_InputField Target;
 
-    public KeyboardSkin KeyboardSkin = KeyboardSkins.defaultSkin;
+    private readonly KeyboardSkin _keyboardSkin = KeyboardSkins.defaultSkin;
 
-    public UppercaseToggleBehaviour UppercaseBehaviour;
+    private UppercaseToggleBehaviour _uppercaseBehaviour;
 
     // Start is called before the first frame update
     void Start()
     {
         // Ensure there is a valid target (input field) for the keyboard
-        if (target == null)
+        if (Target == null)
         {
             Debug.LogError("[Keyboard] There is no target attached to this game object.\n" +
                            "Attach an object of type TMP_InputField on this script.");
             Destroy(this);
         }
 
-        ShiftMode = ShiftMode.None;
+        _shiftMode = ShiftMode.None;
 
         InitCanvas();
-        CreateMainPanel(KeyboardSkin);
-        PopulatePanels(KeyboardSkin, Layout.Normal);
+        CreateMainPanel(_keyboardSkin);
+        PopulatePanels(_keyboardSkin, Layout.Normal);
     }
 
     private void ToggleUppercase()
     {
-        switch (ShiftMode)
+        switch (_shiftMode)
         {
             case ShiftMode.None:
-                ShiftMode = ShiftMode.UppercaseSingle;
+                _shiftMode = ShiftMode.UppercaseSingle;
                 break;
             case ShiftMode.UppercaseSingle:
-                ShiftMode = ShiftMode.UppercaseLock;
+                _shiftMode = ShiftMode.UppercaseLock;
                 break;
             case ShiftMode.UppercaseLock:
-                ShiftMode = ShiftMode.None;
+                _shiftMode = ShiftMode.None;
                 break;
         }
 
@@ -69,27 +69,27 @@ public class Keyboard : MonoBehaviour
 
     private void UpdateUppercase()
     {
-        bool isUppercase = (ShiftMode != ShiftMode.None);
+        bool isUppercase = (_shiftMode != ShiftMode.None);
 
-        foreach (var key in Keys)
+        foreach (var key in _keys)
         {
             key.SetUppercase(isUppercase);
         }
 
-        UppercaseBehaviour?.UpdateImage(ShiftMode);
+        _uppercaseBehaviour?.UpdateImage(_shiftMode);
     }
 
     private void ToggleSymbols()
     {
-        IsShowingSymbols = !IsShowingSymbols;
+        _isShowingSymbols = !_isShowingSymbols;
 
-        if (IsShowingSymbols)
+        if (_isShowingSymbols)
         {
-            PopulatePanels(KeyboardSkin, Layout.Symbols);
+            PopulatePanels(_keyboardSkin, Layout.Symbols);
         }
         else
         {
-            PopulatePanels(KeyboardSkin, Layout.Normal);
+            PopulatePanels(_keyboardSkin, Layout.Normal);
         }
     }
 
@@ -112,22 +112,22 @@ public class Keyboard : MonoBehaviour
     private void CreateMainPanel(KeyboardSkin skin)
     {
         // The main panel holds the four rows of the keyboard.
-        MainPanel = new GameObject("Panel");
-        MainPanel.transform.parent = transform;
+        _mainPanel = new GameObject("Panel");
+        _mainPanel.transform.parent = transform;
 
-        MainPanel.AddComponent<CanvasRenderer>();
+        _mainPanel.AddComponent<CanvasRenderer>();
 
-        Image image = MainPanel.AddComponent<Image>();
+        Image image = _mainPanel.AddComponent<Image>();
         image.sprite = skin.GetBackgroundImage();
         image.pixelsPerUnitMultiplier = skin.GetBackgroundImagePixelsPerUnitMultiplier();
 
         // Sets the children rows to be vertically aligned
-        VerticalLayoutGroup mainLayout = MainPanel.AddComponent<VerticalLayoutGroup>();
+        VerticalLayoutGroup mainLayout = _mainPanel.AddComponent<VerticalLayoutGroup>();
         mainLayout.spacing = -3;
         mainLayout.childControlHeight = false;
         mainLayout.childControlWidth = false;
 
-        RectTransform rectTransform = MainPanel.GetComponent<RectTransform>();
+        RectTransform rectTransform = _mainPanel.GetComponent<RectTransform>();
         rectTransform.SetCentered();
     }
 
@@ -135,22 +135,22 @@ public class Keyboard : MonoBehaviour
     private void PopulatePanels(KeyboardSkin skin, Layout layout)
     {
         // Remove all childrens of main panel
-        foreach (Transform child in MainPanel.transform)
+        foreach (Transform child in _mainPanel.transform)
         {
             Destroy(child.gameObject);
         }
 
         // Clear the list of keys
-        Keys = new List<KeyBehaviour>();
+        _keys = new List<KeyBehaviour>();
 
         // Set main panel background
-        MainPanel.GetComponent<Image>().color = skin.KeyboardBackground;
+        _mainPanel.GetComponent<Image>().color = skin.KeyboardBackground;
 
         KeyboardLayout keyboardLayout = KeyboardLayoutHandler.GetLayout(layout);
 
         foreach (KeyboardRow keyboardRow in keyboardLayout.Rows)
         {
-            GameObject row = InitRow("Row" + keyboardRow.RowIndex, MainPanel, keyboardRow.Spacing);
+            GameObject row = InitRow("Row" + keyboardRow.RowIndex, _mainPanel, keyboardRow.Spacing);
             Populate(row, keyboardRow, skin);
         }
     }
@@ -241,7 +241,7 @@ public class Keyboard : MonoBehaviour
                 {
                     KeyBehaviour keyBehaviour = keyObj.AddComponent<KeyBehaviour>();
                     keyBehaviour.Init(keybhv.Text);
-                    Keys.Add(keyBehaviour);
+                    _keys.Add(keyBehaviour);
 
                     button.onClick.AddListener(() => { Write(key.Name); });
                 }
@@ -256,7 +256,7 @@ public class Keyboard : MonoBehaviour
                 UppercaseToggleBehaviour uppercaseToggleBehaviour = image.AddComponent<UppercaseToggleBehaviour>();
                 uppercaseToggleBehaviour.Init(uppercaseToggle);
 
-                UppercaseBehaviour = uppercaseToggleBehaviour;
+                _uppercaseBehaviour = uppercaseToggleBehaviour;
 
                 button.onClick.AddListener(ToggleUppercase);
             }
@@ -285,29 +285,29 @@ public class Keyboard : MonoBehaviour
     {
         Debug.Log("[Keyboard] Writing '" + keyName + "'.");
 
-        string initialContent = target.text;
+        string initialContent = Target.text;
 
-        if (ShiftMode != ShiftMode.None)
+        if (_shiftMode != ShiftMode.None)
             keyName = keyName.ToUpper();
 
         string resultContent = initialContent + keyName;
-        target.text = resultContent;
+        Target.text = resultContent;
 
         // Disable shift if it's in single uppercase letter mode (not caps lock)
-        if (ShiftMode == ShiftMode.UppercaseSingle)
+        if (_shiftMode == ShiftMode.UppercaseSingle)
         {
-            ShiftMode = ShiftMode.None;
+            _shiftMode = ShiftMode.None;
             UpdateUppercase();
         }
     }
 
     private void Backspace()
     {
-        string initialContent = target.text;
+        string initialContent = Target.text;
         if (initialContent.Length > 0)
         {
             string resultContent = initialContent.Substring(0, initialContent.Length - 1);
-            target.text = resultContent;
+            Target.text = resultContent;
         }
     }
 }
