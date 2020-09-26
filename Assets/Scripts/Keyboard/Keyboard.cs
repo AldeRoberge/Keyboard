@@ -98,8 +98,8 @@ public class Keyboard : MonoBehaviour
         Canvas canvas = gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
 
-        CanvasScaler canvasScaler = gameObject.AddComponent<CanvasScaler>();
-        GraphicRaycaster graphicRaycaster = gameObject.AddComponent<GraphicRaycaster>();
+        gameObject.AddComponent<CanvasScaler>();
+        gameObject.AddComponent<GraphicRaycaster>();
 
         // Set width to 200 and height to 100
         RectTransform r = GetComponent<RectTransform>();
@@ -120,6 +120,7 @@ public class Keyboard : MonoBehaviour
         Image image = _mainPanel.AddComponent<Image>();
         image.sprite = skin.GetBackgroundImage();
         image.pixelsPerUnitMultiplier = skin.GetBackgroundImagePixelsPerUnitMultiplier();
+        image.type = Image.Type.Sliced;
 
         // Sets the children rows to be vertically aligned
         VerticalLayoutGroup mainLayout = _mainPanel.AddComponent<VerticalLayoutGroup>();
@@ -134,7 +135,7 @@ public class Keyboard : MonoBehaviour
 
     private void PopulatePanels(KeyboardSkin skin, Layout layout)
     {
-        // Remove all childrens of main panel
+        // Clear the main panel
         foreach (Transform child in _mainPanel.transform)
         {
             Destroy(child.gameObject);
@@ -142,6 +143,9 @@ public class Keyboard : MonoBehaviour
 
         // Clear the list of keys
         _keys = new List<KeyBehaviour>();
+
+        // Clear the uppercase handler (it is recreated in Populate)
+        _uppercaseBehaviour = null;
 
         // Set main panel background
         _mainPanel.GetComponent<Image>().color = skin.KeyboardBackground;
@@ -159,7 +163,7 @@ public class Keyboard : MonoBehaviour
     {
         GameObject row = new GameObject(name);
         row.transform.parent = parent.transform;
-        CanvasRenderer canvasRenderer = row.AddComponent<CanvasRenderer>();
+        row.AddComponent<CanvasRenderer>();
 
         // Set keys to be horizontally aligned
         HorizontalLayoutGroup firstRowLayout = row.AddComponent<HorizontalLayoutGroup>();
@@ -253,10 +257,8 @@ public class Keyboard : MonoBehaviour
 
             if (keyboardObject is UppercaseToggle uppercaseToggle)
             {
-                UppercaseToggleBehaviour uppercaseToggleBehaviour = image.AddComponent<UppercaseToggleBehaviour>();
-                uppercaseToggleBehaviour.Init(uppercaseToggle);
-
-                _uppercaseBehaviour = uppercaseToggleBehaviour;
+                _uppercaseBehaviour = image.AddComponent<UppercaseToggleBehaviour>();
+                _uppercaseBehaviour.Init(uppercaseToggle);
 
                 button.onClick.AddListener(ToggleUppercase);
             }
@@ -309,31 +311,5 @@ public class Keyboard : MonoBehaviour
             string resultContent = initialContent.Substring(0, initialContent.Length - 1);
             Target.text = resultContent;
         }
-    }
-}
-
-
-public class KeyBehaviour : MonoBehaviour
-{
-    public bool IsUppercase;
-    public TextMeshProUGUI Text;
-
-    public void Init(TextMeshProUGUI textMeshProUgui)
-    {
-        Text = textMeshProUgui;
-    }
-
-    public void SetUppercase(bool isUppercase)
-    {
-        IsUppercase = isUppercase;
-        UpdateKeyText();
-    }
-
-    private void UpdateKeyText()
-    {
-        if (IsUppercase)
-            Text.text = Text.text.ToUpper();
-        else
-            Text.text = Text.text.ToLower();
     }
 }

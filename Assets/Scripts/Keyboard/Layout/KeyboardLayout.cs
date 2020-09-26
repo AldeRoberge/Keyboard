@@ -1,0 +1,131 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace DefaultNamespace
+{
+    
+
+    public class SpaceBarButton : TextButton
+    {
+        public SpaceBarButton(string name, float fontSize = Keys.KeyFontSize, float width = Keys.KeyWidth) : base(name, fontSize, width)
+        {
+        }
+    }
+
+    public class SymbolsToggle : ToggleableTextButton
+    {
+        public SymbolsToggle(string name, string displayTextToggledOn, float fontSize, float width) : base(name, displayTextToggledOn, fontSize, width)
+        {
+        }
+    }
+
+    public class BackspaceButton : ImageObjectButton
+    {
+        public BackspaceButton(string name, string image, float width) : base(name, image, width)
+        {
+        }
+    }
+
+    public class UppercaseToggle : ToggleableImageObjectButton
+    {
+        public string ImageCapsLock;
+
+        public UppercaseToggle(string name, string image, string imageToggledOn, string imageCapsLock, float width) : base(name, image, imageToggledOn, width)
+        {
+            ImageCapsLock = imageCapsLock;
+        }
+    }
+
+    /// <summary>
+    /// Like a TextButton but holds an additional string to display once the button is toggled on.
+    /// </summary>
+    public class ToggleableTextButton : TextButton
+    {
+        public string DisplayTextToggledOn;
+
+        public ToggleableTextButton(string name, string displayTextToggledOn, float fontSize, float width) : base(name, fontSize, width)
+        {
+            DisplayTextToggledOn = displayTextToggledOn;
+        }
+    }
+
+    /// <summary>
+    /// A Key that is used to populate a field once pressed.
+    /// </summary>
+    public class Key : TextButton
+    {
+        public Key(string name, float fontSize = Keys.KeyFontSize, float width = Keys.KeyWidth) : base(name, fontSize, width)
+        {
+        }
+    }
+
+    /// <summary>
+    /// A button that does an action instead of sending a keystroke.
+    /// </summary>
+    public class TextButton : KeyboardObject
+    {
+        public readonly float FontSize;
+
+        public TextButton(string name, float fontSize, float width) : base(name, width)
+        {
+            FontSize = fontSize;
+        }
+    }
+
+    /// <summary>
+    /// Holds a reference to an additional image used when the button is toggled on.
+    /// </summary>
+    public class ToggleableImageObjectButton : ImageObjectButton
+    {
+        public readonly string ImageToggledOnResourcePath;
+
+        public ToggleableImageObjectButton(string name, string image, string imageToggledOn, float width) : base(name, image, width)
+        {
+            ImageToggledOnResourcePath = imageToggledOn;
+        }
+    }
+
+    /// <summary>
+    /// A button that has an image instead of text like the Uppercase and Backspace buttons.
+    /// </summary>
+    public class ImageObjectButton : KeyboardObject
+    {
+        public readonly string Image;
+
+        public ImageObjectButton(string name, string image, float width) : base(name, width)
+        {
+            Image = image;
+        }
+    }
+
+    /// <summary>
+    /// An invisible object used to create empty space.
+    /// </summary>
+    public class Spacer : KeyboardObject
+    {
+        public Spacer(float width) : base("Spacer", width)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Anything that is placed on the keyboard.
+    /// It can be a key, i.e. : Q, W, E, R, T or a button like Backspace.
+    /// </summary>
+    public class KeyboardObject
+    {
+        public readonly string Name;
+
+        public float Height { get; }
+        public float Width { get; }
+
+        public KeyboardObject(string name, float width = Keys.KeyWidth, float height = Keys.KeyHeight)
+        {
+            Name = name;
+            Width = width;
+            Height = height;
+        }
+    }
+}

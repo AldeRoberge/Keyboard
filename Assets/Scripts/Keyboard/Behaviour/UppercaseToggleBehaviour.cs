@@ -16,6 +16,7 @@ namespace DefaultNamespace
 
         public void UpdateImage(ShiftMode shiftMode)
         {
+
             Debug.Log("Image : " + _image.gameObject.name);
 
             Debug.Log("Updating image... Mode : " + shiftMode);

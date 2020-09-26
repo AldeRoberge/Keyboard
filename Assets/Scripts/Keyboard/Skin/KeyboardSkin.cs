@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class KeyboardSkins
+    public static class KeyboardSkins
     {
         public static readonly KeyboardSkin defaultSkin = new KeyboardSkin(
             new Color(0.11f, 0.11f, 0.12f),

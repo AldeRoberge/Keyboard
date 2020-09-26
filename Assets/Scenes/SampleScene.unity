@@ -614,13 +614,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59e34616e3c26fa44883aeaa75ba6ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainPanel: {fileID: 0}
-  Keys: []
-  ShiftToggleImage: {fileID: 0}
-  ShiftMode: 0
-  IsShowingSymbols: 0
-  target: {fileID: 1085252905}
-  UppercaseBehaviour: {fileID: 0}
+  Target: {fileID: 1085252905}
 --- !u!1 &1085252903
 GameObject:
   m_ObjectHideFlags: 0
