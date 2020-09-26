@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,12 @@ public class Keyboard : MonoBehaviour
     {
         InitCanvas();
         CreatePanels();
+        PopulatePanels();
+    }
+
+    private void PopulatePanels()
+    {
+        
     }
 
 

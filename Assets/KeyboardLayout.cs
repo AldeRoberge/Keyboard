@@ -1,13 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
+    public enum Layout
+    {
+        Normal,
+        Symbols
+    }
+
     public class Keys
     {
-        public const int WiderButtons = 25;
+        // Size constants
+        public const int KeyWidth = 20;
+        public const int KeyHeight = 24;
+
+        public const int WiderButtonsWidth = 25;
         public const int SpaceBarWidth = 100;
 
+        // Keys (Declaration follows a top to bottom, normal to symbols order)
         public static readonly Key Q = new Key("q");
         public static readonly Key W = new Key("w");
         public static readonly Key E = new Key("e");
@@ -29,7 +41,7 @@ namespace DefaultNamespace
         public static readonly Key K = new Key("k");
         public static readonly Key L = new Key("l");
 
-        public static readonly ImageButton Uppercase = new ImageButton("arrow-up", WiderButtons);
+        public static readonly ToggleableImageObjectButton Uppercase = new ToggleableImageObjectButton("arrow-up", "arrow-up", WiderButtonsWidth);
         public static readonly Key Z = new Key("z");
         public static readonly Key X = new Key("x");
         public static readonly Key C = new Key("c");
@@ -37,14 +49,13 @@ namespace DefaultNamespace
         public static readonly Key B = new Key("b");
         public static readonly Key N = new Key("n");
         public static readonly Key M = new Key("m");
-        public static readonly ImageButton Backspace = new ImageButton("backspace", WiderButtons);
+        public static readonly ImageObjectButton Backspace = new ImageObjectButton("backspace", WiderButtonsWidth);
 
-        public static readonly ToggleableTextButton Symbols = new ToggleableTextButton("?123", "ABC", WiderButtons);
+        public static readonly ToggleableTextButton Symbols = new ToggleableTextButton("?123", "ABC", WiderButtonsWidth);
         public static readonly Key At = new Key("@");
         public static readonly TextButton Space = new TextButton("space", SpaceBarWidth);
         public static readonly Key Dot = new Key(".");
         public static readonly TextButton Go = new TextButton("Go", 34);
-
 
         // Numbers
         public static readonly Key One = new Key("1");
@@ -68,7 +79,7 @@ namespace DefaultNamespace
         public static readonly Key ClosingParenthese = new Key(")");
         public static readonly Key ForwardSlash = new Key("/");
 
-        public static readonly ToggleableTextButton MoreSymbols = new ToggleableTextButton("=\\<", "?123", WiderButtons);
+        public static readonly ToggleableTextButton MoreSymbols = new ToggleableTextButton("=\\<", "?123", WiderButtonsWidth);
         public static readonly Key Asterisk = new Key("*");
         public static readonly Key DoubleQuote = new Key("\"");
         public static readonly Key SingleQuote = new Key("'");
@@ -82,44 +93,57 @@ namespace DefaultNamespace
 
     public class KeyboardLayoutHandler
     {
-        public KeyboardLayouts KeyboardLayouts;
+        private static KeyboardLayout normalLayout;
+        private static KeyboardLayout symbolsLayout;
 
         public KeyboardLayoutHandler()
         {
-            
             // Normal layout
-            KeyboardRow normalRowFirst = new KeyboardRow(Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
-            KeyboardRow normalRowSecond = new KeyboardRow(Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L);
-            KeyboardRow normalRowThird = new KeyboardRow(Keys.Uppercase, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, Keys.Backspace);
-            KeyboardRow normalRowFourth = new KeyboardRow(Keys.Symbols, Keys.At, Keys.Space, Keys.Dot, Keys.Go);
+            KeyboardRow normalRowOne = new KeyboardRow(Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
+            KeyboardRow normalRowTwo = new KeyboardRow(Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L);
+            KeyboardRow normalRowThree = new KeyboardRow(Keys.Uppercase, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, Keys.Backspace);
+            KeyboardRow normalRowFour = new KeyboardRow(Keys.Symbols, Keys.At, Keys.Space, Keys.Dot, Keys.Go);
 
-            KeyboardLayout normalLayout = new KeyboardLayout(
-                normalRowFirst, normalRowSecond, normalRowThird, normalRowFourth);
+            normalLayout = new KeyboardLayout(
+                normalRowOne, normalRowTwo, normalRowThree, normalRowFour);
 
             // Symbols layout
-            KeyboardRow symbolsRowFirst = new KeyboardRow(Keys.One, Keys.Two, Keys.Three, Keys.Four, Keys.Five, Keys.Six, Keys.Seven, Keys.Eight, Keys.Nine, Keys.Zero);
-            KeyboardRow symbolsRowSecond = new KeyboardRow(Keys.At, Keys.NumberSign, Keys.DollarSign, Keys.UnderScore, Keys.AndSymbol, Keys.Hyphen, Keys.PlusSign, Keys.OpeningParenthese, Keys.ClosingParenthese, Keys.ForwardSlash);
-            KeyboardRow symbolsRowThird = new KeyboardRow(new Spacer(Keys.WiderButtons), Keys.Asterisk, Keys.DoubleQuote, Keys.SingleQuote, Keys.Colon, Keys.SemiColon, Keys.ExclamationMark, Keys.QuestionMark, Keys.Backspace);
-            KeyboardRow symbolsRowFourth = new KeyboardRow(Keys.Symbols, Keys.Comma, Keys.Space, Keys.Dot, Keys.Go);
+            KeyboardRow symbolsRowOne = new KeyboardRow(Keys.One, Keys.Two, Keys.Three, Keys.Four, Keys.Five, Keys.Six, Keys.Seven, Keys.Eight, Keys.Nine, Keys.Zero);
+            KeyboardRow symbolsRowTwo = new KeyboardRow(Keys.At, Keys.NumberSign, Keys.DollarSign, Keys.UnderScore, Keys.AndSymbol, Keys.Hyphen, Keys.PlusSign, Keys.OpeningParenthese, Keys.ClosingParenthese, Keys.ForwardSlash);
+            KeyboardRow symbolsRowThree = new KeyboardRow(new Spacer(Keys.WiderButtonsWidth), Keys.Asterisk, Keys.DoubleQuote, Keys.SingleQuote, Keys.Colon, Keys.SemiColon, Keys.ExclamationMark, Keys.QuestionMark, Keys.Backspace);
+            KeyboardRow symbolsRowFour = new KeyboardRow(Keys.Symbols, Keys.Comma, Keys.Space, Keys.Dot, Keys.Go);
 
-            KeyboardLayout symbolsLayout = new KeyboardLayout(
-                symbolsRowFirst, symbolsRowSecond, symbolsRowThird, symbolsRowFourth);
-            
-            KeyboardLayouts = new KeyboardLayouts(normalLayout, symbolsLayout);
+            symbolsLayout = new KeyboardLayout(
+                symbolsRowOne, symbolsRowTwo, symbolsRowThree, symbolsRowFour);
         }
-    }
 
-
-    public class KeyboardLayouts
-    {
-        public List<KeyboardLayout> Layouts = new List<KeyboardLayout>();
-
-        public KeyboardLayouts(params KeyboardLayout[] layouts)
+        public static KeyboardLayout GetLayout(Layout layout)
         {
-            this.Layouts = layouts.ToList();
+            switch (layout)
+            {
+                case Layout.Normal:
+                    return normalLayout;
+                case Layout.Symbols:
+                    return symbolsLayout;
+                default:
+                    Debug.Log("Fatal : Could not find the KeyboardLayout for layout of type : '" + layout + "'.");
+                    return null;
+            }
+        }
+
+        public static KeyboardLayout GetSymbolsLayout()
+        {
+            if (symbolsLayout == null)
+            {
+            }
+
+            return symbolsLayout;
         }
     }
 
+    /// <summary>
+    /// A List of KeyboardRows.
+    /// </summary>
     public class KeyboardLayout
     {
         public List<KeyboardRow> rows = new List<KeyboardRow>();
@@ -130,82 +154,107 @@ namespace DefaultNamespace
         }
     }
 
+    /// <summary>
+    /// A Row of KeyBoardObjects.
+    /// </summary>
     public class KeyboardRow
     {
-        private readonly List<KeyboardButton> keys = new List<KeyboardButton>();
+        private readonly List<KeyboardObject> keys = new List<KeyboardObject>();
 
-        public KeyboardRow(params KeyboardButton[] keys)
+        public KeyboardRow(params KeyboardObject[] keys)
         {
             this.keys = this.keys.ToList();
         }
     }
 
-    public class Key : KeyboardButton
+    /// <summary>
+    /// A Key that is used to populate a field once pressed.
+    /// </summary>
+    public class Key : KeyboardObject
     {
-        private string name;
+        private string key;
 
-        public Key(string name)
+        public Key(string key)
         {
-            this.name = name;
+            this.key = key;
         }
     }
 
+    /// <summary>
+    /// Like a TextButton but holds an additional string to display once the button is toggled on.
+    /// </summary>
     public class ToggleableTextButton : TextButton
     {
         public string DisplayTextToggledOn;
 
         public ToggleableTextButton(string displayText, string displayTextToggledOn, float width) : base(displayText, width)
         {
-            this.DisplayTextToggledOn = displayTextToggledOn;
+            DisplayTextToggledOn = displayTextToggledOn;
         }
     }
 
-    public class TextButton : KeyboardButton
+    /// <summary>
+    /// A button that does an action instead of sending a keystroke.
+    /// </summary>
+    public class TextButton : KeyboardObject
     {
         public string DisplayText;
 
         public TextButton(string displayText, float width) : base(width)
         {
-            this.DisplayText = displayText;
+            DisplayText = displayText;
         }
     }
 
-    public class ToggleableImageButton : ImageButton
+    /// <summary>
+    /// Holds a reference to an additional image used when the button is toggled on.
+    /// </summary>
+    public class ToggleableImageObjectButton : ImageObjectButton
     {
         public string ImageToggledOnResourcePath;
 
-        public ToggleableImageButton(string imageResourcePath, string imageToggledOn, float width) : base(imageResourcePath, width)
+        public ToggleableImageObjectButton(string imageResourcePath, string imageToggledOn, float width) : base(imageResourcePath, width)
         {
             ImageToggledOnResourcePath = imageToggledOn;
         }
     }
 
-    public class ImageButton : KeyboardButton
+    /// <summary>
+    /// A button that has an image instead of text like the Uppercase and Backspace buttons.
+    /// </summary>
+    public class ImageObjectButton : KeyboardObject
     {
         public string ImageResourcePath;
 
-        public ImageButton(string imageResourcePath, float width) : base(width)
+        public ImageObjectButton(string imageResourcePath, float width) : base(width)
         {
-            this.ImageResourcePath = imageResourcePath;
+            ImageResourcePath = imageResourcePath;
         }
     }
 
-    public class Spacer : KeyboardButton
+    /// <summary>
+    /// An invisible object used to create empty space.
+    /// </summary>
+    public class Spacer : KeyboardObject
     {
         public Spacer(float width) : base(width)
         {
         }
     }
 
-    public class KeyboardButton
+    /// <summary>
+    /// Anything that is placed on the keyboard.
+    /// It can be a key, i.e. : Q, W, E, R, T or a button like Backspace.
+    /// </summary>
+    public class KeyboardObject
     {
         public float Height { get; }
         public float Width { get; }
 
-        public KeyboardButton(float width = 20, float height = 24)
+        public KeyboardObject(float width = Keys.KeyWidth, float height = Keys.KeyHeight)
         {
-            this.Width = width;
-            this.Height = height;
+            Width = width;
+            Height = height;
         }
     }
 }
