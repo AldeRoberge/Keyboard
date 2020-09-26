@@ -8,17 +8,28 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+public enum ShiftMode
+{
+    None,
+    UppercaseSingle,
+    UppercaseLock // Caps lock
+}
+
 public class Keyboard : MonoBehaviour
 {
     public GameObject MainPanel;
     public List<KeyBehaviour> Keys;
 
-    public bool IsUppercase;
+    public Image ShiftToggleImage;
+
+    public ShiftMode ShiftMode;
     public bool IsShowingSymbols;
 
     public TMP_InputField target;
 
     public KeyboardSkin KeyboardSkin = KeyboardSkins.defaultSkin;
+
+    public UppercaseToggleBehaviour UppercaseBehaviour;
 
     // Start is called before the first frame update
     void Start()
@@ -31,24 +42,41 @@ public class Keyboard : MonoBehaviour
             Destroy(this);
         }
 
+        ShiftMode = ShiftMode.None;
+
         InitCanvas();
-        CreatePanels();
+        CreateMainPanel(KeyboardSkin);
         PopulatePanels(KeyboardSkin, Layout.Normal);
     }
 
     private void ToggleUppercase()
     {
-        IsUppercase = !IsUppercase;
+        switch (ShiftMode)
+        {
+            case ShiftMode.None:
+                ShiftMode = ShiftMode.UppercaseSingle;
+                break;
+            case ShiftMode.UppercaseSingle:
+                ShiftMode = ShiftMode.UppercaseLock;
+                break;
+            case ShiftMode.UppercaseLock:
+                ShiftMode = ShiftMode.None;
+                break;
+        }
 
         UpdateUppercase();
     }
 
     private void UpdateUppercase()
     {
+        bool isUppercase = (ShiftMode != ShiftMode.None);
+
         foreach (var key in Keys)
         {
-            key.SetUppercase(IsUppercase);
+            key.SetUppercase(isUppercase);
         }
+
+        UppercaseBehaviour?.UpdateImage(ShiftMode);
     }
 
     private void ToggleSymbols()
@@ -81,7 +109,7 @@ public class Keyboard : MonoBehaviour
         transform.position = new Vector3(0, 0, 150);
     }
 
-    private void CreatePanels()
+    private void CreateMainPanel(KeyboardSkin skin)
     {
         // The main panel holds the four rows of the keyboard.
         MainPanel = new GameObject("Panel");
@@ -90,9 +118,9 @@ public class Keyboard : MonoBehaviour
         MainPanel.AddComponent<CanvasRenderer>();
 
         Image image = MainPanel.AddComponent<Image>();
-        image.sprite = Resources.Load<Sprite>("KeyBackgroundImage");
-        image.pixelsPerUnitMultiplier = 7;
-        
+        image.sprite = skin.GetBackgroundImage();
+        image.pixelsPerUnitMultiplier = skin.GetBackgroundImagePixelsPerUnitMultiplier();
+
         // Sets the children rows to be vertically aligned
         VerticalLayoutGroup mainLayout = MainPanel.AddComponent<VerticalLayoutGroup>();
         mainLayout.spacing = -3;
@@ -158,7 +186,7 @@ public class Keyboard : MonoBehaviour
 
             // Set key background image (rounded rectangle)
             Image backgroundImage = keyObj.AddComponent<Image>();
-            backgroundImage.sprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+            backgroundImage.sprite = skin.GetKeyBackground();
             backgroundImage.type = Image.Type.Sliced;
             backgroundImage.color = skin.KeyBackground;
 
@@ -180,14 +208,17 @@ public class Keyboard : MonoBehaviour
             rectTransform.sizeDelta = new Vector2(keyboardObject.Width, keyboardObject.Height);
             rectTransform.localPosition = Vector3.zero;
 
+
+            GameObject image = null;
+
             // Add image
             if (keyboardObject is ImageObjectButton imageObjectButton)
             {
-                GameObject image = new GameObject("Image");
+                image = new GameObject("Image");
                 image.transform.parent = keyObj.transform;
 
                 Image img = image.AddComponent<Image>();
-                img.sprite = Resources.Load<Sprite>(imageObjectButton.ImageResourcePath);
+                img.sprite = Resources.Load<Sprite>(imageObjectButton.Image);
 
                 RectTransform imgRectTransform = image.GetComponent<RectTransform>();
                 imgRectTransform.sizeDelta = new Vector2(10, 10);
@@ -212,7 +243,6 @@ public class Keyboard : MonoBehaviour
                     keyBehaviour.Init(keybhv.Text);
                     Keys.Add(keyBehaviour);
 
-
                     button.onClick.AddListener(() => { Write(key.Name); });
                 }
                 else
@@ -221,37 +251,54 @@ public class Keyboard : MonoBehaviour
                 }
             }
 
-            // Register special behaviours
-            if (keyboardObject is UppercaseToggle)
+            if (keyboardObject is UppercaseToggle uppercaseToggle)
             {
+                UppercaseToggleBehaviour uppercaseToggleBehaviour = image.AddComponent<UppercaseToggleBehaviour>();
+                uppercaseToggleBehaviour.Init(uppercaseToggle);
+
+                UppercaseBehaviour = uppercaseToggleBehaviour;
+
                 button.onClick.AddListener(ToggleUppercase);
             }
 
-            // Register special behaviours
             if (keyboardObject is BackspaceButton)
             {
                 button.onClick.AddListener(Backspace);
             }
 
-            // Register special behaviours
             if (keyboardObject is SymbolsToggle)
             {
                 button.onClick.AddListener(ToggleSymbols);
             }
+
+            if (keyboardObject is SpaceBarButton)
+            {
+                button.onClick.AddListener(() => { Write(" "); });
+            }
         }
-        
+
         UpdateUppercase();
     }
 
+
     private void Write(string keyName)
     {
+        Debug.Log("[Keyboard] Writing '" + keyName + "'.");
+
         string initialContent = target.text;
 
-        if (IsUppercase)
+        if (ShiftMode != ShiftMode.None)
             keyName = keyName.ToUpper();
 
         string resultContent = initialContent + keyName;
         target.text = resultContent;
+
+        // Disable shift if it's in single uppercase letter mode (not caps lock)
+        if (ShiftMode == ShiftMode.UppercaseSingle)
+        {
+            ShiftMode = ShiftMode.None;
+            UpdateUppercase();
+        }
     }
 
     private void Backspace()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -22,6 +23,21 @@ namespace DefaultNamespace
             KeyboardBackground = keyboardBackground;
             KeyBackground = keyBackground;
             KeyForeground = keyForeground;
+        }
+
+        public Sprite GetKeyBackground()
+        {
+            return AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+        }
+
+        public Sprite GetBackgroundImage()
+        {
+            return Resources.Load<Sprite>("KeyBackgroundImage");
+        }
+
+        public float GetBackgroundImagePixelsPerUnitMultiplier()
+        {
+            return 7;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DefaultNamespace
 {
@@ -44,7 +45,7 @@ namespace DefaultNamespace
         public static readonly Key K = new Key("k");
         public static readonly Key L = new Key("l");
 
-        public static readonly UppercaseToggle Uppercase = new UppercaseToggle("Uppercase", "arrow-up", "arrow-up", WiderButtonsWidth);
+        public static readonly UppercaseToggle Uppercase = new UppercaseToggle("Uppercase", "arrow-up-empty", "arrow-up", "arrow-up-line", WiderButtonsWidth);
         public static readonly Key Z = new Key("z");
         public static readonly Key X = new Key("x");
         public static readonly Key C = new Key("c");
@@ -56,7 +57,7 @@ namespace DefaultNamespace
 
         public static readonly SymbolsToggle Symbols = new SymbolsToggle("?123", "ABC", SmallerKeyFontSize, WiderButtonsWidth);
         public static readonly Key At = new Key("@");
-        public static readonly SpaceBarButton Space = new SpaceBarButton("space", SmallerKeyFontSize, SpaceBarWidth);
+        public static readonly SpaceBarButton SpaceBar = new SpaceBarButton("space", SmallerKeyFontSize, SpaceBarWidth);
         public static readonly Key Dot = new Key(".");
         public static readonly TextButton Go = new TextButton("Go", SmallerKeyFontSize, 34);
 
@@ -107,7 +108,7 @@ namespace DefaultNamespace
             KeyboardRow normalRowOne = new KeyboardRow(0, 0, Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
             KeyboardRow normalRowTwo = new KeyboardRow(1, -18.5f, Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L);
             KeyboardRow normalRowThree = new KeyboardRow(2, -0.85f, Keys.Uppercase, thirdRowSpacer, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, thirdRowSpacer, Keys.Backspace);
-            KeyboardRow normalRowFour = new KeyboardRow(3, -0.85f, Keys.Symbols, Keys.At, Keys.Space, Keys.Dot, Keys.Go);
+            KeyboardRow normalRowFour = new KeyboardRow(3, -0.85f, Keys.Symbols, Keys.At, Keys.SpaceBar, Keys.Dot, Keys.Go);
 
             normalLayout = new KeyboardLayout(
                 normalRowOne, normalRowTwo, normalRowThree, normalRowFour);
@@ -116,7 +117,7 @@ namespace DefaultNamespace
             KeyboardRow symbolsRowOne = new KeyboardRow(0, 0, Keys.One, Keys.Two, Keys.Three, Keys.Four, Keys.Five, Keys.Six, Keys.Seven, Keys.Eight, Keys.Nine, Keys.Zero);
             KeyboardRow symbolsRowTwo = new KeyboardRow(1, 0, Keys.At, Keys.NumberSign, Keys.DollarSign, Keys.UnderScore, Keys.AndSymbol, Keys.Hyphen, Keys.PlusSign, Keys.OpeningParenthese, Keys.ClosingParenthese, Keys.ForwardSlash);
             KeyboardRow symbolsRowThree = new KeyboardRow(2, 0, new Spacer(Keys.WiderButtonsWidth), Keys.Asterisk, Keys.DoubleQuote, Keys.SingleQuote, Keys.Colon, Keys.SemiColon, Keys.ExclamationMark, Keys.QuestionMark, Keys.Backspace);
-            KeyboardRow symbolsRowFour = new KeyboardRow(3, 0, Keys.Symbols, Keys.Comma, Keys.Space, Keys.Dot, Keys.Go);
+            KeyboardRow symbolsRowFour = new KeyboardRow(3, 0, Keys.Symbols, Keys.Comma, Keys.SpaceBar, Keys.Dot, Keys.Go);
 
             symbolsLayout = new KeyboardLayout(
                 symbolsRowOne, symbolsRowTwo, symbolsRowThree, symbolsRowFour);
@@ -158,7 +159,7 @@ namespace DefaultNamespace
             Rows = rows.ToList();
         }
     }
-    
+
     /// <summary>
     /// A Row of KeyBoardObjects.
     /// </summary>
@@ -175,14 +176,14 @@ namespace DefaultNamespace
             Keys = keys.ToList();
         }
     }
-    
-    public class SpaceBarButton : Key
+
+    public class SpaceBarButton : TextButton
     {
         public SpaceBarButton(string name, float fontSize = Keys.KeyFontSize, float width = Keys.KeyWidth) : base(name, fontSize, width)
         {
         }
     }
-    
+
     public class SymbolsToggle : ToggleableTextButton
     {
         public SymbolsToggle(string name, string displayTextToggledOn, float fontSize, float width) : base(name, displayTextToggledOn, fontSize, width)
@@ -192,15 +193,18 @@ namespace DefaultNamespace
 
     public class BackspaceButton : ImageObjectButton
     {
-        public BackspaceButton(string name, string imageResourcePath, float width) : base(name, imageResourcePath, width)
+        public BackspaceButton(string name, string image, float width) : base(name, image, width)
         {
         }
     }
 
     public class UppercaseToggle : ToggleableImageObjectButton
     {
-        public UppercaseToggle(string name, string imageResourcePath, string imageToggledOn, float width) : base(name, imageResourcePath, imageToggledOn, width)
+        public string ImageCapsLock;
+
+        public UppercaseToggle(string name, string image, string imageToggledOn, string imageCapsLock, float width) : base(name, image, imageToggledOn, width)
         {
+            ImageCapsLock = imageCapsLock;
         }
     }
 
@@ -245,9 +249,9 @@ namespace DefaultNamespace
     /// </summary>
     public class ToggleableImageObjectButton : ImageObjectButton
     {
-        public string ImageToggledOnResourcePath;
+        public readonly string ImageToggledOnResourcePath;
 
-        public ToggleableImageObjectButton(string name, string imageResourcePath, string imageToggledOn, float width) : base(name, imageResourcePath, width)
+        public ToggleableImageObjectButton(string name, string image, string imageToggledOn, float width) : base(name, image, width)
         {
             ImageToggledOnResourcePath = imageToggledOn;
         }
@@ -258,11 +262,11 @@ namespace DefaultNamespace
     /// </summary>
     public class ImageObjectButton : KeyboardObject
     {
-        public string ImageResourcePath;
+        public readonly string Image;
 
-        public ImageObjectButton(string name, string imageResourcePath, float width) : base(name, width)
+        public ImageObjectButton(string name, string image, float width) : base(name, width)
         {
-            ImageResourcePath = imageResourcePath;
+            Image = image;
         }
     }
 
@@ -282,7 +286,7 @@ namespace DefaultNamespace
     /// </summary>
     public class KeyboardObject
     {
-        public string Name;
+        public readonly string Name;
 
         public float Height { get; }
         public float Width { get; }
