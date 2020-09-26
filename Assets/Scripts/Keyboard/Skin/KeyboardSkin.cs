@@ -5,39 +5,32 @@ namespace DefaultNamespace
 {
     public static class KeyboardSkins
     {
-        public static readonly KeyboardSkin defaultSkin = new KeyboardSkin(
-            new Color(0.11f, 0.11f, 0.12f),
-            new Color(0.6f, 0.6f, 0.6f),
-            new Color(0.89f, 0.89f, 0.89f)
-        );
+        public static readonly DefaultSkin DefaultSkin = new DefaultSkin();
     }
 
-    public class KeyboardSkin
+    public class DefaultSkin : KeyboardSkin
     {
-        public Color KeyboardBackground;
-        public Color KeyBackground;
-        public Color KeyForeground;
+        public override Color GetKeyboardBackgroundColor() => new Color(0.16f, 0.16f, 0.16f);
+        public override Color GetKeyBackgroundColor() => new Color(0.52f, 0.52f, 0.52f);
+        public override Color GetKeyForegroundColor() => new Color(0.89f, 0.89f, 0.89f);
+        public override Sprite GetBackgroundImage() => Resources.Load<Sprite>("KeyBackgroundImage");
+        
+        public override Sprite GetKeyBackgroundImage() => AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+        
+        public override float GetBackgroundImagePixelsPerUnitMultiplier() => 7;
+    }
 
-        public KeyboardSkin(Color keyboardBackground, Color keyBackground, Color keyForeground)
-        {
-            KeyboardBackground = keyboardBackground;
-            KeyBackground = keyBackground;
-            KeyForeground = keyForeground;
-        }
-
-        public Sprite GetKeyBackground()
-        {
-            return AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-        }
-
-        public Sprite GetBackgroundImage()
-        {
-            return Resources.Load<Sprite>("KeyBackgroundImage");
-        }
-
-        public float GetBackgroundImagePixelsPerUnitMultiplier()
-        {
-            return 7;
-        }
+    public abstract class KeyboardSkin
+    {
+        public abstract Color GetKeyboardBackgroundColor();
+        public abstract Color GetKeyBackgroundColor();
+        public abstract Color GetKeyForegroundColor();
+        public abstract Sprite GetBackgroundImage();
+        public abstract float GetBackgroundImagePixelsPerUnitMultiplier();
+        
+        
+        public abstract Sprite GetKeyBackgroundImage();
+        
+        
     }
 }

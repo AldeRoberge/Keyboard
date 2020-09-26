@@ -23,11 +23,13 @@ public class Keyboard : MonoBehaviour
     private Image _shiftToggleImage;
 
     private ShiftMode _shiftMode;
+
+    private ToggleableTextButtonBehaviour _toggleableTextButton;
     private bool _isShowingSymbols;
 
     public TMP_InputField Target;
 
-    private readonly KeyboardSkin _keyboardSkin = KeyboardSkins.defaultSkin;
+    private readonly KeyboardSkin _keyboardSkin = KeyboardSkins.DefaultSkin;
 
     private UppercaseToggleBehaviour _uppercaseBehaviour;
 
@@ -82,7 +84,7 @@ public class Keyboard : MonoBehaviour
     private void ToggleSymbols()
     {
         _isShowingSymbols = !_isShowingSymbols;
-
+        
         if (_isShowingSymbols)
         {
             PopulatePanels(_keyboardSkin, Layout.Symbols);
@@ -91,6 +93,8 @@ public class Keyboard : MonoBehaviour
         {
             PopulatePanels(_keyboardSkin, Layout.Normal);
         }
+        
+        _toggleableTextButton?.UpdateText(_isShowingSymbols);
     }
 
     private void InitCanvas()
@@ -148,7 +152,7 @@ public class Keyboard : MonoBehaviour
         _uppercaseBehaviour = null;
 
         // Set main panel background
-        _mainPanel.GetComponent<Image>().color = skin.KeyboardBackground;
+        _mainPanel.GetComponent<Image>().color = skin.GetKeyboardBackgroundColor();
 
         KeyboardLayout keyboardLayout = KeyboardLayoutHandler.GetLayout(layout);
 
@@ -190,9 +194,9 @@ public class Keyboard : MonoBehaviour
 
             // Set key background image (rounded rectangle)
             Image backgroundImage = keyObj.AddComponent<Image>();
-            backgroundImage.sprite = skin.GetKeyBackground();
+            backgroundImage.sprite = skin.GetKeyBackgroundImage();
             backgroundImage.type = Image.Type.Sliced;
-            backgroundImage.color = skin.KeyBackground;
+            backgroundImage.color = skin.GetKeyBackgroundColor();
 
             if (keyboardObject is Spacer)
             {
@@ -211,7 +215,6 @@ public class Keyboard : MonoBehaviour
             RectTransform rectTransform = keyObj.GetComponent<RectTransform>();
             rectTransform.sizeDelta = new Vector2(keyboardObject.Width, keyboardObject.Height);
             rectTransform.localPosition = Vector3.zero;
-
 
             GameObject image = null;
 
@@ -232,26 +235,28 @@ public class Keyboard : MonoBehaviour
             // Add text
             if (keyboardObject is TextButton TextButton)
             {
+                var color = backgroundImage.color;
+
                 backgroundImage.color = new Color(
-                    backgroundImage.color.r,
-                    backgroundImage.color.g,
-                    backgroundImage.color.b,
+                    color.r,
+                    color.g,
+                    color.b,
                     0.8f);
 
-                TextButtonBehaviour keybhv = keyObj.AddComponent<TextButtonBehaviour>();
-                keybhv.Init(TextButton, skin.KeyForeground);
+                TextButtonBehaviour textButtonBehaviour = keyObj.AddComponent<TextButtonBehaviour>();
+                textButtonBehaviour.Init(TextButton, skin.GetKeyForegroundColor());
 
                 if (keyboardObject is Key key)
                 {
                     KeyBehaviour keyBehaviour = keyObj.AddComponent<KeyBehaviour>();
-                    keyBehaviour.Init(keybhv.Text);
+                    keyBehaviour.Init(textButtonBehaviour.Text);
                     _keys.Add(keyBehaviour);
 
                     button.onClick.AddListener(() => { Write(key.Name); });
                 }
                 else
                 {
-                    keybhv.SlightlyDarker();
+                    textButtonBehaviour.SlightlyDarker();
                 }
             }
 
@@ -268,8 +273,12 @@ public class Keyboard : MonoBehaviour
                 button.onClick.AddListener(Backspace);
             }
 
-            if (keyboardObject is SymbolsToggle)
+            if (keyboardObject is SymbolsToggle toggle)
             {
+                _toggleableTextButton = keyObj.AddComponent<ToggleableTextButtonBehaviour>();
+                _toggleableTextButton.Init(toggle);
+
+
                 button.onClick.AddListener(ToggleSymbols);
             }
 
@@ -283,6 +292,10 @@ public class Keyboard : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Adds a character to the target input field.
+    /// Is called when a key is pressed.
+    /// </summary>
     private void Write(string keyName)
     {
         Debug.Log("[Keyboard] Writing '" + keyName + "'.");
@@ -303,6 +316,10 @@ public class Keyboard : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes a character from the target input field.
+    /// Is called when the Backspace button is pressed.
+    /// </summary>
     private void Backspace()
     {
         string initialContent = Target.text;
@@ -313,3 +330,4 @@ public class Keyboard : MonoBehaviour
         }
     }
 }
+
