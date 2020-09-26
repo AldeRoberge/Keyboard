@@ -6,7 +6,7 @@ namespace DefaultNamespace
     {
         public static readonly KeyboardSkin defaultSkin = new KeyboardSkin(
             new Color(0.11f, 0.11f, 0.12f),
-            new Color(0.22f, 0.22f, 0.22f),
+            new Color(0.6f, 0.6f, 0.6f),
             new Color(0.89f, 0.89f, 0.89f)
         );
     }

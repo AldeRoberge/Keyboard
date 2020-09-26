@@ -19,6 +19,9 @@ namespace DefaultNamespace
         public const int WiderButtonsWidth = 25;
         public const int SpaceBarWidth = 100;
 
+        public const float KeyFontSize = 10;
+        public const float SmallerKeyFontSize = 8;
+
         // Keys (Declaration follows a top to bottom, normal to symbols order)
         public static readonly Key Q = new Key("q");
         public static readonly Key W = new Key("w");
@@ -41,7 +44,7 @@ namespace DefaultNamespace
         public static readonly Key K = new Key("k");
         public static readonly Key L = new Key("l");
 
-        public static readonly ToggleableImageObjectButton Uppercase = new ToggleableImageObjectButton("arrow-up", "arrow-up", WiderButtonsWidth);
+        public static readonly UppercaseToggle Uppercase = new UppercaseToggle("Uppercase", "arrow-up", "arrow-up", WiderButtonsWidth);
         public static readonly Key Z = new Key("z");
         public static readonly Key X = new Key("x");
         public static readonly Key C = new Key("c");
@@ -49,13 +52,13 @@ namespace DefaultNamespace
         public static readonly Key B = new Key("b");
         public static readonly Key N = new Key("n");
         public static readonly Key M = new Key("m");
-        public static readonly ImageObjectButton Backspace = new ImageObjectButton("backspace", WiderButtonsWidth);
+        public static readonly BackspaceButton Backspace = new BackspaceButton("Backspace", "backspace", WiderButtonsWidth);
 
-        public static readonly ToggleableTextButton Symbols = new ToggleableTextButton("?123", "ABC", WiderButtonsWidth);
+        public static readonly SymbolsToggle Symbols = new SymbolsToggle("?123", "ABC", SmallerKeyFontSize, WiderButtonsWidth);
         public static readonly Key At = new Key("@");
-        public static readonly TextButton Space = new TextButton("space", SpaceBarWidth);
+        public static readonly SpaceBarButton Space = new SpaceBarButton("space", SmallerKeyFontSize, SpaceBarWidth);
         public static readonly Key Dot = new Key(".");
-        public static readonly TextButton Go = new TextButton("Go", 34);
+        public static readonly TextButton Go = new TextButton("Go", SmallerKeyFontSize, 34);
 
         // Numbers
         public static readonly Key One = new Key("1");
@@ -79,7 +82,7 @@ namespace DefaultNamespace
         public static readonly Key ClosingParenthese = new Key(")");
         public static readonly Key ForwardSlash = new Key("/");
 
-        public static readonly ToggleableTextButton MoreSymbols = new ToggleableTextButton("=\\<", "?123", WiderButtonsWidth);
+        public static readonly ToggleableTextButton MoreSymbols = new ToggleableTextButton("=\\<", "?123", SmallerKeyFontSize, WiderButtonsWidth);
         public static readonly Key Asterisk = new Key("*");
         public static readonly Key DoubleQuote = new Key("\"");
         public static readonly Key SingleQuote = new Key("'");
@@ -98,10 +101,12 @@ namespace DefaultNamespace
 
         static KeyboardLayoutHandler()
         {
+            Spacer thirdRowSpacer = new Spacer(2.5f);
+
             // Normal layout
             KeyboardRow normalRowOne = new KeyboardRow(0, 0, Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
             KeyboardRow normalRowTwo = new KeyboardRow(1, -18.5f, Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L);
-            KeyboardRow normalRowThree = new KeyboardRow(2, -0.85f, Keys.Uppercase, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, Keys.Backspace);
+            KeyboardRow normalRowThree = new KeyboardRow(2, -0.85f, Keys.Uppercase, thirdRowSpacer, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, thirdRowSpacer, Keys.Backspace);
             KeyboardRow normalRowFour = new KeyboardRow(3, -0.85f, Keys.Symbols, Keys.At, Keys.Space, Keys.Dot, Keys.Go);
 
             normalLayout = new KeyboardLayout(
@@ -153,7 +158,7 @@ namespace DefaultNamespace
             Rows = rows.ToList();
         }
     }
-
+    
     /// <summary>
     /// A Row of KeyBoardObjects.
     /// </summary>
@@ -170,17 +175,32 @@ namespace DefaultNamespace
             Keys = keys.ToList();
         }
     }
-
-    /// <summary>
-    /// A Key that is used to populate a field once pressed.
-    /// </summary>
-    public class Key : KeyboardObject
+    
+    public class SpaceBarButton : Key
     {
-        public string Name;
-
-        public Key(string name)
+        public SpaceBarButton(string name, float fontSize = Keys.KeyFontSize, float width = Keys.KeyWidth) : base(name, fontSize, width)
         {
-            Name = name;
+        }
+    }
+    
+    public class SymbolsToggle : ToggleableTextButton
+    {
+        public SymbolsToggle(string name, string displayTextToggledOn, float fontSize, float width) : base(name, displayTextToggledOn, fontSize, width)
+        {
+        }
+    }
+
+    public class BackspaceButton : ImageObjectButton
+    {
+        public BackspaceButton(string name, string imageResourcePath, float width) : base(name, imageResourcePath, width)
+        {
+        }
+    }
+
+    public class UppercaseToggle : ToggleableImageObjectButton
+    {
+        public UppercaseToggle(string name, string imageResourcePath, string imageToggledOn, float width) : base(name, imageResourcePath, imageToggledOn, width)
+        {
         }
     }
 
@@ -191,9 +211,19 @@ namespace DefaultNamespace
     {
         public string DisplayTextToggledOn;
 
-        public ToggleableTextButton(string displayText, string displayTextToggledOn, float width) : base(displayText, width)
+        public ToggleableTextButton(string name, string displayTextToggledOn, float fontSize, float width) : base(name, fontSize, width)
         {
             DisplayTextToggledOn = displayTextToggledOn;
+        }
+    }
+
+    /// <summary>
+    /// A Key that is used to populate a field once pressed.
+    /// </summary>
+    public class Key : TextButton
+    {
+        public Key(string name, float fontSize = Keys.KeyFontSize, float width = Keys.KeyWidth) : base(name, fontSize, width)
+        {
         }
     }
 
@@ -202,11 +232,11 @@ namespace DefaultNamespace
     /// </summary>
     public class TextButton : KeyboardObject
     {
-        public string DisplayText;
+        public readonly float FontSize;
 
-        public TextButton(string displayText, float width) : base(width)
+        public TextButton(string name, float fontSize, float width) : base(name, width)
         {
-            DisplayText = displayText;
+            FontSize = fontSize;
         }
     }
 
@@ -217,7 +247,7 @@ namespace DefaultNamespace
     {
         public string ImageToggledOnResourcePath;
 
-        public ToggleableImageObjectButton(string imageResourcePath, string imageToggledOn, float width) : base(imageResourcePath, width)
+        public ToggleableImageObjectButton(string name, string imageResourcePath, string imageToggledOn, float width) : base(name, imageResourcePath, width)
         {
             ImageToggledOnResourcePath = imageToggledOn;
         }
@@ -230,7 +260,7 @@ namespace DefaultNamespace
     {
         public string ImageResourcePath;
 
-        public ImageObjectButton(string imageResourcePath, float width) : base(width)
+        public ImageObjectButton(string name, string imageResourcePath, float width) : base(name, width)
         {
             ImageResourcePath = imageResourcePath;
         }
@@ -241,7 +271,7 @@ namespace DefaultNamespace
     /// </summary>
     public class Spacer : KeyboardObject
     {
-        public Spacer(float width) : base(width)
+        public Spacer(float width) : base("Spacer", width)
         {
         }
     }
@@ -252,11 +282,14 @@ namespace DefaultNamespace
     /// </summary>
     public class KeyboardObject
     {
+        public string Name;
+
         public float Height { get; }
         public float Width { get; }
 
-        public KeyboardObject(float width = Keys.KeyWidth, float height = Keys.KeyHeight)
+        public KeyboardObject(string name, float width = Keys.KeyWidth, float height = Keys.KeyHeight)
         {
+            Name = name;
             Width = width;
             Height = height;
         }
