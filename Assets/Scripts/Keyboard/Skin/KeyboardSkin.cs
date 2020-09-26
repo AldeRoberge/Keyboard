@@ -15,22 +15,19 @@ namespace DefaultNamespace
         public override Color GetKeyboardBackgroundColor() => new Color(0.16f, 0.16f, 0.16f);
         public override Color GetKeyBackgroundColor() => new Color(0.52f, 0.52f, 0.52f);
         public override Color GetKeyForegroundColor() => new Color(0.89f, 0.89f, 0.89f);
-        public override Sprite GetBackgroundImage() => Resources.Load<Sprite>("Keyboard/KeyBackgroundImage");
-
+        public override Sprite GetBackgroundImage() => Resources.Load<Sprite>("Keyboard/DefaultSkin/KeyBackgroundImage");
         public override Sprite GetKeyBackgroundImage() => AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-
-        public override TMP_FontAsset GetTextFont() => Resources.Load<TMP_FontAsset>("Keyboard/Fonts/Gilroy-Bold");
-
+        public override TMP_FontAsset GetTextFont() => Resources.Load<TMP_FontAsset>("Keyboard/DefaultSkin/Fonts/Gilroy-Bold");
         public override float GetBackgroundImagePixelsPerUnitMultiplier() => 7;
 
         public override Dictionary<string, string> GetKeyToResourcesMap()
         {
             return new Dictionary<string, string>()
             {
-                {"arrow-up-empty", "Keyboard/arrow-up-empty"},
-                {"arrow-up", "Keyboard/arrow-up"},
-                {"arrow-up-line", "Keyboard/arrow-up-line"},
-                {"backspace", "Keyboard/backspace"},
+                {"arrow-up-empty", "Keyboard/DefaultSkin/Sprites/arrow-up-empty"},
+                {"arrow-up", "Keyboard/DefaultSkin/Sprites/arrow-up"},
+                {"arrow-up-line", "Keyboard/DefaultSkin/Sprites/arrow-up-line"},
+                {"backspace", "Keyboard/DefaultSkin/Sprites/backspace"},
             };
         }
     }
