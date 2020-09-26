@@ -99,19 +99,19 @@ namespace DefaultNamespace
         public KeyboardLayoutHandler()
         {
             // Normal layout
-            KeyboardRow normalRowOne = new KeyboardRow(Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
-            KeyboardRow normalRowTwo = new KeyboardRow(Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L);
-            KeyboardRow normalRowThree = new KeyboardRow(Keys.Uppercase, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, Keys.Backspace);
-            KeyboardRow normalRowFour = new KeyboardRow(Keys.Symbols, Keys.At, Keys.Space, Keys.Dot, Keys.Go);
+            KeyboardRow normalRowOne = new KeyboardRow(0, 0, Keys.Q, Keys.W, Keys.E, Keys.R, Keys.T, Keys.Y, Keys.U, Keys.I, Keys.O, Keys.P);
+            KeyboardRow normalRowTwo = new KeyboardRow(1, -18.5f, Keys.A, Keys.S, Keys.D, Keys.F, Keys.G, Keys.H, Keys.J, Keys.K, Keys.L);
+            KeyboardRow normalRowThree = new KeyboardRow(2, -0.85f, Keys.Uppercase, Keys.Z, Keys.X, Keys.C, Keys.V, Keys.B, Keys.N, Keys.M, Keys.Backspace);
+            KeyboardRow normalRowFour = new KeyboardRow(3, -0.85f, Keys.Symbols, Keys.At, Keys.Space, Keys.Dot, Keys.Go);
 
             normalLayout = new KeyboardLayout(
                 normalRowOne, normalRowTwo, normalRowThree, normalRowFour);
 
             // Symbols layout
-            KeyboardRow symbolsRowOne = new KeyboardRow(Keys.One, Keys.Two, Keys.Three, Keys.Four, Keys.Five, Keys.Six, Keys.Seven, Keys.Eight, Keys.Nine, Keys.Zero);
-            KeyboardRow symbolsRowTwo = new KeyboardRow(Keys.At, Keys.NumberSign, Keys.DollarSign, Keys.UnderScore, Keys.AndSymbol, Keys.Hyphen, Keys.PlusSign, Keys.OpeningParenthese, Keys.ClosingParenthese, Keys.ForwardSlash);
-            KeyboardRow symbolsRowThree = new KeyboardRow(new Spacer(Keys.WiderButtonsWidth), Keys.Asterisk, Keys.DoubleQuote, Keys.SingleQuote, Keys.Colon, Keys.SemiColon, Keys.ExclamationMark, Keys.QuestionMark, Keys.Backspace);
-            KeyboardRow symbolsRowFour = new KeyboardRow(Keys.Symbols, Keys.Comma, Keys.Space, Keys.Dot, Keys.Go);
+            KeyboardRow symbolsRowOne = new KeyboardRow(0, 0, Keys.One, Keys.Two, Keys.Three, Keys.Four, Keys.Five, Keys.Six, Keys.Seven, Keys.Eight, Keys.Nine, Keys.Zero);
+            KeyboardRow symbolsRowTwo = new KeyboardRow(1, 0, Keys.At, Keys.NumberSign, Keys.DollarSign, Keys.UnderScore, Keys.AndSymbol, Keys.Hyphen, Keys.PlusSign, Keys.OpeningParenthese, Keys.ClosingParenthese, Keys.ForwardSlash);
+            KeyboardRow symbolsRowThree = new KeyboardRow(2, 0, new Spacer(Keys.WiderButtonsWidth), Keys.Asterisk, Keys.DoubleQuote, Keys.SingleQuote, Keys.Colon, Keys.SemiColon, Keys.ExclamationMark, Keys.QuestionMark, Keys.Backspace);
+            KeyboardRow symbolsRowFour = new KeyboardRow(3, 0, Keys.Symbols, Keys.Comma, Keys.Space, Keys.Dot, Keys.Go);
 
             symbolsLayout = new KeyboardLayout(
                 symbolsRowOne, symbolsRowTwo, symbolsRowThree, symbolsRowFour);
@@ -146,11 +146,11 @@ namespace DefaultNamespace
     /// </summary>
     public class KeyboardLayout
     {
-        public List<KeyboardRow> rows = new List<KeyboardRow>();
+        public readonly List<KeyboardRow> Rows = new List<KeyboardRow>();
 
         public KeyboardLayout(params KeyboardRow[] rows)
         {
-            this.rows = this.rows.ToList();
+            Rows = Rows.ToList();
         }
     }
 
@@ -159,11 +159,15 @@ namespace DefaultNamespace
     /// </summary>
     public class KeyboardRow
     {
-        private readonly List<KeyboardObject> keys = new List<KeyboardObject>();
+        public float Spacing;
+        public int RowIndex;
+        public readonly List<KeyboardObject> Keys = new List<KeyboardObject>();
 
-        public KeyboardRow(params KeyboardObject[] keys)
+        public KeyboardRow(int rowIndex, float spacing, params KeyboardObject[] keys)
         {
-            this.keys = this.keys.ToList();
+            RowIndex = rowIndex;
+            this.Spacing = spacing;
+            Keys = Keys.ToList();
         }
     }
 
@@ -172,11 +176,11 @@ namespace DefaultNamespace
     /// </summary>
     public class Key : KeyboardObject
     {
-        private string key;
+        public string Name;
 
-        public Key(string key)
+        public Key(string name)
         {
-            this.key = key;
+            Name = name;
         }
     }
 

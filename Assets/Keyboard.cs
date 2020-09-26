@@ -14,11 +14,33 @@ public class Keyboard : MonoBehaviour
         PopulatePanels();
     }
 
-    private void PopulatePanels()
+
+    public GameObject MainPanel;
+
+    private void PopulatePanels(Layout layout = Layout.Normal)
     {
-        
+        // Remove all childs of main panel
+        foreach (GameObject child in MainPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        KeyboardLayout keyboardLayout = KeyboardLayoutHandler.GetLayout(layout);
+
+        foreach (KeyboardRow keyboardRow in keyboardLayout.Rows)
+        {
+            GameObject row = InitRow("Row" + keyboardRow.RowIndex, MainPanel, keyboardRow.Spacing);
+            Populate(row, keyboardRow);
+        }
     }
 
+    private void Populate(GameObject rowOne, KeyboardRow keyboardRow)
+    {
+        foreach (KeyboardObject keyboardObject in keyboardRow.Keys)
+        {
+            
+        }
+    }
 
     private void InitCanvas()
     {
@@ -39,24 +61,19 @@ public class Keyboard : MonoBehaviour
     private void CreatePanels()
     {
         // The main panel holds the four rows of the keyboard.
-        GameObject mainPanel = new GameObject("Panel");
-        mainPanel.transform.parent = transform;
+        MainPanel = new GameObject("Panel");
+        MainPanel.transform.parent = transform;
 
         // Sets the children rows to be vertically aligned
-        VerticalLayoutGroup mainLayout = mainPanel.AddComponent<VerticalLayoutGroup>();
+        VerticalLayoutGroup mainLayout = MainPanel.AddComponent<VerticalLayoutGroup>();
         mainLayout.spacing = -3;
-
-        GameObject rowOne = InitRow("RowOne", mainPanel, 0);
-        GameObject rowTwo = InitRow("RowTwo", mainPanel, -18.5f);
-        GameObject rowThree = InitRow("RowThree", mainPanel, -0.85f);
-        GameObject rowFour = InitRow("RowFour", mainPanel, -0.85f);
     }
 
     private GameObject InitRow(string name, GameObject parent, float spacing)
     {
         GameObject row = new GameObject(name);
         row.transform.parent = parent.transform;
-        
+
         // Set keys to be horizontally aligned
         HorizontalLayoutGroup firstRowLayout = row.AddComponent<HorizontalLayoutGroup>();
         firstRowLayout.childAlignment = TextAnchor.MiddleCenter;
