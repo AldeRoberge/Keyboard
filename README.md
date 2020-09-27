@@ -5,4 +5,8 @@
  A simple visual keyboard for Unity.
 
 ![Card 1](https://i.imgur.com/C6q820U.png "Card 1")
-![Card 2](https://i.imgur.com/SCkv8wO.png "Card 2")
+
+100% programmatically generated. Easily customizable.
+
+Unity 2020.3
+Requires TextMeshPro (Automatically imported)
