@@ -99,7 +99,7 @@ public class Keyboard : MonoBehaviour
 
     private void InitCanvas()
     {
-        Canvas canvas = gameObject.AddComponent<Canvas>();
+        Canvas canvas = gameObject.GetOrAddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
 
         gameObject.AddComponent<CanvasScaler>();

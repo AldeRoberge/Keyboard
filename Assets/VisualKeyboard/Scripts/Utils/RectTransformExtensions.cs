@@ -4,6 +4,9 @@ namespace DefaultNamespace.Utils
 {
     public static class RectTransformUtils
     {
+        /// <summary>
+        /// Same as clicking on Alt+Shift and centering the RectTransform.
+        /// </summary>
         public static void SetCentered(this RectTransform rectTransform)
         {
             rectTransform.localPosition = new Vector3(0, 0, 0);
